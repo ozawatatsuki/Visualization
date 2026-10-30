@@ -1,0 +1,120 @@
+GAMS 34.3.0  rac355f3 Released Feb 25, 2021 WEX-WEI x86 64bit/MS Windows - 05/19/26 16:50:35 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  SET
+   2  Y /2020*2100/
+   3  R /WLD/
+   4  seg Income decile/ 1*1000
+   5  ALL/
+   6  seg2(seg) /
+   7  1*1000
+   8  /
+   9  var/
+  10  Cereals
+  11  Meats
+  12  Fish
+  13  Dairy
+  14  Oils_and_Fats
+  15  Fruits_and_Veg
+  16  Food_Other
+  17  total
+  18  /
+  19  Ref/
+  20  SSP2_BaU_NoCC_No
+  21  SSP2_400C_2025CP_NoCC_No
+  22  /
+  23  eff/
+  24  Base
+  25  Income
+  26  Price
+  27  "Income+Price"
+  28  /
+  29  ;
+  30  parameter
+  31  FoodDem_load_In(Ref,var,R,Y,seg)
+  32  FoodDem_load_InPr(Ref,var,R,Y,seg)
+  33  FoodDem_value(var,seg,eff)
+  34  FoodDem_base_add(var,seg,eff)
+  35  PoU_load_In(Ref,R,Y)
+  36  PoU_load_InPr(Ref,R,Y)
+  37  PoU_value(Y,eff)
+  38  PoU_base_add(Y,eff)
+  39  ;
+  40   
+  41   
+**** File: C:\A_economy\Visualization\prog\data/1000/Fooddem_PriceEffect_1000.gdx
+**** Msg : No such file or directory
+  42  $gdxin "data/1000/Fooddem_PriceEffect_1000.gdx"
+****                                                $510
+**** 510  Unable to open gdx file for $GDXIN
+  43  $load FoodDem_load_In=FoodDemIn FoodDem_load_InPr=FoodDem_peffect PoU_load_In=PoU_In_Ragg_calc PoU_load_InPr=PoU_In_Pr_Ragg_calc
+****      $502
+**** 502  GDXIN  file not open - ignore rest of line
+  44   
+  45  FoodDem_value(var,seg,"Base")=FoodDem_load_In("SSP2_BaU_NoCC_No",var,"WLD","2050",seg);
+****                                              $141
+**** 141  Symbol declared but no values have been assigned. Check for missing
+****         data definition, assignment, data loading or implicit assignment
+****         via a solve statement.
+****         A wild shot: You may have spurious commas in the explanatory
+****         text of a declaration. Check symbol reference list.
+  46  FoodDem_value(var,seg,"Income")=FoodDem_load_In("SSP2_400C_2025CP_NoCC_No",var,"WLD","2050",seg);
+  47  FoodDem_value(var,seg,"Income+Price")=FoodDem_load_InPr("SSP2_400C_2025CP_NoCC_No",var,"WLD","2050",seg);
+****                                                        $141
+**** 141  Symbol declared but no values have been assigned. Check for missing
+****         data definition, assignment, data loading or implicit assignment
+****         via a solve statement.
+****         A wild shot: You may have spurious commas in the explanatory
+****         text of a declaration. Check symbol reference list.
+  48   
+  49  FoodDem_base_add(var,seg,"Base")=FoodDem_value(var,seg,"Base");
+  50  FoodDem_base_add(var,seg,"Income")=FoodDem_value(var,seg,"Income")-FoodDem_value(var,seg,"Base");
+  51  FoodDem_base_add(var,seg,"Price")=FoodDem_value(var,seg,"Income+Price")-FoodDem_value(var,seg,"Income");
+  52   
+  53   
+  54  PoU_value(Y,"Base")=PoU_load_In("SSP2_BaU_NoCC_No","WLD",Y);
+****                                $141
+**** 141  Symbol declared but no values have been assigned. Check for missing
+****         data definition, assignment, data loading or implicit assignment
+****         via a solve statement.
+****         A wild shot: You may have spurious commas in the explanatory
+****         text of a declaration. Check symbol reference list.
+  55  PoU_value(Y,"Income")=PoU_load_In("SSP2_400C_2025CP_NoCC_No","WLD",Y);
+  56  PoU_value(Y,"Income+Price")=PoU_load_InPr("SSP2_400C_2025CP_NoCC_No","WLD",Y);
+****                                          $141
+**** 141  Symbol declared but no values have been assigned. Check for missing
+****         data definition, assignment, data loading or implicit assignment
+****         via a solve statement.
+****         A wild shot: You may have spurious commas in the explanatory
+****         text of a declaration. Check symbol reference list.
+  57   
+  58  PoU_base_add(Y,"Base")=PoU_value(Y,"Base");
+  59  PoU_base_add(Y,"Income")=PoU_value(Y,"Income")-PoU_value(Y,"Base");
+  60  PoU_base_add(Y,"Price")=PoU_value(Y,"Income+Price")-PoU_value(Y,"Income");
+  61   
+  62   
+  63  execute_unload 'data/FDM_kyoeiken.gdx'
+  64  FoodDem_base_add
+  65  PoU_value
+  66  PoU_base_add
+  67  ;
+
+**** 6 ERROR(S)   0 WARNING(S)
+
+
+COMPILATION TIME     =        0.032 SECONDS      3 MB  34.3.0 rac355f3 WEX-WEI
+
+
+USER: Medium MUD - 10 User License                   S221125|0002AO-GEN
+      Kyoto University, Department of Environmental Engineering DC12258
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\A_economy\Visualization\prog\260519_kyoeiken.gms
+Output     C:\A_economy\Visualization\prog\260519_kyoeiken.lst
+
+**** USER ERROR(S) ENCOUNTERED
